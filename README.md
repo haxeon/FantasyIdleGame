@@ -2,13 +2,14 @@
 
 A mobile incremental idle game. A young chief rebuilds his raided village, finds out he alone can bond with dragons, and raises one dragon from hatchling to legend.
 
-Built from the *Dragon Chief — Idle Game Design Doc* (Nov 15, 2026). This build covers **Act 1: The Ashes** and - **Village view:** the Village tab shows the whole village, from smoking ruins to a restored settlement. Each building is redrawn as it is repaired and upgraded, villagers stand at their job sites, the stockpile grows with your stores, and the sky clears as the village is restored. Tap a building to jump to it.
+Built from the *Dragon Chief — Idle Game Design Doc* (Nov 15, 2026). This build covers **Act 1: The Ashes** and - **Gather in the world:** tap the forest, rubble, mine, fields and lake in the village itself to gather by hand.
+- **Village view:** the village scene is always on screen and shows the whole village, from smoking ruins to a restored settlement. Each building is redrawn as it is repaired and upgraded, villagers stand at their job sites, the stockpile grows with your stores, and the sky clears as the village is restored. Tap a building to jump to it.
 
 **Act 2: The Bond**, ending on the Act 3 seed (Rune magic and the troll collars).
 
 ## Play
 
-It's a no-build web game (plain ES modules), installable as a PWA and playable offline.
+It's a no-build web game (plain ES modules), installable as a PWA and playable offline. It is laid out for iPad first: in landscape the living village fills the centre with a management panel on the right; in portrait they stack. Phones get a compact stacked layout.
 
 ```sh
 npm start          # serves on http://localhost:8080
@@ -27,7 +28,8 @@ On a phone, open the URL and use **Add to Home Screen** to install it full-scree
 - Clues found while gathering fill the Lore journal.
 - Finale: the baby dragon in the troll net (you name it).
 
-- **Village view:** the Village tab shows the whole village, from smoking ruins to a restored settlement. Each building is redrawn as it is repaired and upgraded, villagers stand at their job sites, the stockpile grows with your stores, and the sky clears as the village is restored. Tap a building to jump to it.
+- **Gather in the world:** tap the forest, rubble, mine, fields and lake in the village itself to gather by hand.
+- **Village view:** the village scene is always on screen and shows the whole village, from smoking ruins to a restored settlement. Each building is redrawn as it is repaired and upgraded, villagers stand at their job sites, the stockpile grows with your stores, and the sky clears as the village is restored. Tap a building to jump to it.
 
 **Act 2: The Bond**
 - Dragon needs (Hunger, Warmth, Affection) drain over time and combine into **Contentment**, which multiplies dragon XP, Bond and a village-wide morale bonus. A neglected dragon never dies; it just stops growing and boosting.

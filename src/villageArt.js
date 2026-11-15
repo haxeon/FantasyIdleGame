@@ -451,7 +451,7 @@ function villagers(s) {
 
 // ---------- the whole scene ----------
 
-let cache = { key: '', svg: '' };
+let cache = { key: '', body: '', crops: {} };
 
 export function villageKey(s, cap) {
   const lvl = (k) => Math.min(4, Math.ceil((s.res[k] / cap) * 4));
@@ -462,22 +462,38 @@ export function villageKey(s, cap) {
   ]);
 }
 
-export function villageSVG(s, cap, highlight = null) {
+export function villageSVG(s, cap, highlight = null, crop = null) {
   const key = villageKey(s, cap);
-  if (!highlight && cache.key === key) return cache.svg;
-  const p = restoration(s);
-  const items = [
-    ...cliff(s, p), ...forest(s, p), ...mine(s), ...quarry(s), ...lake(s, p), ...huts(s),
-    ...blacksmith(s), ...barracks(s), ...chiefsSeat(s), ...farm(s), ...stockpile(s, cap), ...villagers(s),
-  ].sort((a, b) => a.y - b.y);
-  const ring = highlight && RING[highlight]
-    ? `<ellipse class="v-ring" cx="${RING[highlight][0]}" cy="${RING[highlight][1]}" rx="${RING[highlight][2]}" ry="${RING[highlight][2] * 0.45}" fill="none" stroke="#ffd36a" stroke-width="2" stroke-dasharray="5 4"/>`
-    : '';
-  const svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Your village, ${Math.round(p * 100)}% restored">
-    ${sky(s, p)}${ground(p)}${ring}${items.map((i) => i.svg).join('')}
-  </svg>`;
-  if (!highlight) cache = { key, svg };
+  let body;
+  if (!highlight && cache.key === key) body = cache.body;
+  else {
+    const p = restoration(s);
+    const items = [
+      ...cliff(s, p), ...forest(s, p), ...mine(s), ...quarry(s), ...lake(s, p), ...huts(s),
+      ...blacksmith(s), ...barracks(s), ...chiefsSeat(s), ...farm(s), ...stockpile(s, cap), ...villagers(s),
+    ].sort((a, b) => a.y - b.y);
+    const ring = highlight && RING[highlight]
+      ? `<ellipse class="v-ring" cx="${RING[highlight][0]}" cy="${RING[highlight][1]}" rx="${RING[highlight][2]}" ry="${RING[highlight][2] * 0.45}" fill="none" stroke="#ffd36a" stroke-width="2" stroke-dasharray="5 4"/>`
+      : '';
+    body = `${sky(s, p)}${ground(p)}${ring}${items.map((i) => i.svg).join('')}`;
+    if (!highlight) cache = { key, body, crops: {} };
+  }
+  const view = crop ? cropBox(crop) : `0 0 ${W} ${H}`;
+  if (!highlight && cache.crops[view]) return cache.crops[view];
+  const svg = `<svg viewBox="${view}" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${crop ? 'Building view' : `Your village, ${Math.round(restoration(s) * 100)}% restored`}">${body}</svg>`;
+  if (!highlight) cache.crops[view] = svg;
   return svg;
+}
+
+// Close-up windows on each area for building cards.
+const CROPS = {
+  farm: [96, 212, 164], hut: [200, 140, 150], blacksmith: [100, 172, 96], barracks: [312, 172, 130],
+  tent: [200, 112, 110], hall: [200, 112, 120], dock: [334, 146, 100], den: [50, 104, 92],
+};
+function cropBox(k) {
+  const [cx, cy, w] = CROPS[k] || [200, 130, 400];
+  const h = w / 1.8; // matches the 1.8:1 frames the cards use
+  return `${cx - w / 2} ${cy - h / 2} ${w} ${h}`;
 }
 
 // Tap areas [x, y, width, height], fitted so neighbours don't overlap.

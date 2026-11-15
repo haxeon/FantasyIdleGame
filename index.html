@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-  <meta name="theme-color" content="#1a110d">
+  <meta name="theme-color" content="#10121a">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -13,14 +13,16 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Grenze+Gotisch:wght@400;600&display=swap">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="embers" aria-hidden="true"></div>
   <header id="hud"></header>
-  <div id="banner"></div>
-  <main id="main"></main>
-  <nav id="nav"></nav>
+  <nav id="nav" aria-label="Sections"></nav>
+  <main id="world"><div id="stage"></div><div id="desk"></div></main>
+  <aside id="panel"></aside>
   <div id="toasts" aria-live="polite"></div>
   <div id="modal" hidden></div>
   <noscript>Dragon Chief needs JavaScript to run.</noscript>
