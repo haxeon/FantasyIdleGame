@@ -163,6 +163,35 @@ button { font: inherit; color: inherit; }
 .tile-note { font-size: 11px; color: var(--muted); }
 .tile.forge { border-color: #7a3a1d; }
 
+/* village scene */
+.village-card { border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); background: var(--card); margin: 10px 0; }
+.village-scene svg, .modal-art.wide svg { display: block; width: 100%; height: auto; }
+.village-card .village-meta { display: flex; justify-content: space-between; gap: 8px; padding: 8px 12px 0; font-size: 13px; }
+.village-card .bar { margin: 6px 12px 12px; }
+.modal-art.wide { width: 100%; border-radius: 12px; overflow: hidden; margin-bottom: 12px; border: 1px solid var(--line); }
+.v-tap { cursor: pointer; }
+.v-tap:hover { filter: brightness(1.15); }
+.v-label { font: 600 7px system-ui, sans-serif; fill: #f4e6d4; paint-order: stroke; stroke: #1a110d; stroke-width: 2px; }
+.v-label.warn { fill: #ff8a7a; }
+.v-smoke circle { opacity: 0; transform-box: fill-box; transform-origin: center; animation: vsmoke 3.3s linear infinite; }
+@keyframes vsmoke { 0% { opacity: 0; transform: translate(0, 0) scale(0.6); } 20% { opacity: 0.45; } 100% { opacity: 0; transform: translate(6px, -26px) scale(1.6); } }
+.v-flicker { animation: vflicker 1.6s ease-in-out infinite alternate; }
+@keyframes vflicker { from { opacity: 0.65; } to { opacity: 1; } }
+.v-flame { animation: vflicker 0.5s ease-in-out infinite alternate; }
+.v-twinkle { animation: vtwinkle 2s ease-in-out infinite; }
+@keyframes vtwinkle { 50% { opacity: 0.25; } }
+.v-shimmer { animation: vshimmer 3s ease-in-out infinite alternate; }
+@keyframes vshimmer { to { transform: translateX(4px); opacity: 0.4; } }
+.v-fish { animation: vfish 4s ease-in-out infinite; transform-box: fill-box; }
+@keyframes vfish { 0%, 70%, 100% { opacity: 0; transform: translateY(4px); } 80% { opacity: 1; transform: translateY(-3px); } }
+.v-ring { animation: vring 1s linear infinite; }
+@keyframes vring { to { stroke-dashoffset: -18; } }
+.v-rider { animation: vrider 2.4s ease-in-out infinite alternate; }
+@keyframes vrider { to { transform: translate(var(--dx, 8px), 4px); } }
+.v-alarm { animation: vflicker 0.9s ease-in-out infinite alternate; }
+.card.flash { animation: cardflash 1.4s ease-out; }
+@keyframes cardflash { 0%, 40% { box-shadow: 0 0 0 2px var(--ember2), 0 0 24px rgba(255, 179, 90, 0.5); } 100% { box-shadow: none; } }
+
 /* jobs */
 .job { display: flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 8px 10px; margin: 8px 0; }
 .job-ic { font-size: 24px; width: 32px; text-align: center; }

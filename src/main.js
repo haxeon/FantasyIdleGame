@@ -4,6 +4,7 @@ import {
   CLUES, STORY, TRUST_KEEPER, TRUST_RIDERS,
 } from './data.js';
 import { dragonSVG } from './dragonArt.js';
+import { villageSVG, restoration, AREA_INFO } from './villageArt.js';
 
 const SAVE_KEY = 'dragonchief.save.v1';
 const TICK_MS = 100;
@@ -310,15 +311,15 @@ function buildCard(r, k) {
   const done = !def.repeat && n > 0;
   const unlocked = E.buildingUnlocked(s, k);
   if (done) {
-    return `<div class="card built"><div class="row"><div class="big-ic">${def.icon}</div><div class="grow">
+    return `<div class="card built" id="card-${k}"><div class="row"><div class="big-ic">${def.icon}</div><div class="grow">
       <h3>${def.name} <span class="tag ok">Built</span></h3><p>${def.desc}</p></div></div></div>`;
   }
   if (!unlocked) {
-    return `<div class="card locked"><div class="row"><div class="big-ic">🔒</div><div class="grow">
+    return `<div class="card locked" id="card-${k}"><div class="row"><div class="big-ic">🔒</div><div class="grow">
       <h3>${def.name}</h3><p>Rebuild the earlier step first.</p></div></div></div>`;
   }
   const cost = E.buildingCost(s, k);
-  return `<div class="card"><div class="row"><div class="big-ic">${def.icon}</div><div class="grow">
+  return `<div class="card" id="card-${k}"><div class="row"><div class="big-ic">${def.icon}</div><div class="grow">
       <h3>${def.name}${def.repeat && n ? ` <span class="tag">x${n}</span>` : ''}</h3><p>${def.desc}</p>
       <div class="costs">${costHTML(r, cost)}</div></div>
       <button class="btn primary" data-act="build" data-arg="${k}" ${r.en(() => E.canBuild(s, k))}>Build</button>
@@ -329,11 +330,11 @@ function upgradeCard(r, k) {
   const def = UPGRADES[k];
   const n = s.upgrades[k];
   if (!def.repeat && n) {
-    return `<div class="card built"><div class="row"><div class="big-ic">${def.icon}</div><div class="grow">
+    return `<div class="card built" id="card-${k}"><div class="row"><div class="big-ic">${def.icon}</div><div class="grow">
       <h3>${def.name} <span class="tag ok">Made</span></h3><p>${def.desc}</p></div></div></div>`;
   }
   const cost = E.upgradeCost(s, k);
-  return `<div class="card"><div class="row"><div class="big-ic">${def.icon}</div><div class="grow">
+  return `<div class="card" id="card-${k}"><div class="row"><div class="big-ic">${def.icon}</div><div class="grow">
       <h3>${def.name}${def.repeat && n ? ` <span class="tag">Lv ${n}</span>` : ''}</h3><p>${def.desc}</p>
       <div class="costs">${costHTML(r, cost)}</div></div>
       <button class="btn" data-act="upgrade" data-arg="${k}" ${r.en(() => E.canUpgrade(s, k))}>${def.repeat ? 'Upgrade' : 'Craft'}</button>
@@ -353,6 +354,14 @@ function buildTab(r) {
   const ups = Object.keys(UPGRADES).filter((k) => E.upgradeUnlocked(s, k));
   const d = E.derive(s);
   return `<h2>Village</h2>
+    <div class="village-card">
+      <div class="village-scene" ${r.h(() => villageSVG(s, E.derive(s).cap))}></div>
+      <div class="village-meta">
+        <span>Village restored <b>${r.b(() => pct(restoration(s)))}</b></span>
+        <span class="muted">Tap a building to find it</span>
+      </div>
+      <div class="bar"><i ${r.w(() => restoration(s))}></i></div>
+    </div>
     <p class="hint small">Housing ${s.pop} / ${d.housing} · Storage ${fmt(d.cap)} each · Offline earnings up to ${fmtTime(d.offlineCap)}</p>
     ${shownB.map((k) => buildCard(r, k)).join('')}
     ${ups.length ? `<h2>Forge &amp; Barracks</h2>${ups.map((k) => upgradeCard(r, k)).join('')}` : ''}`;
@@ -542,7 +551,7 @@ function nextModal() {
   modalOpen = true;
   modalEl.hidden = false;
   modalEl.innerHTML = `<div class="sheet">
-    ${m.art ? `<div class="modal-art">${m.art}</div>` : ''}
+    ${m.art ? `<div class="modal-art${m.wide ? ' wide' : ''}">${m.art}</div>` : ''}
     ${m.eyebrow ? `<div class="eyebrow">${m.eyebrow}</div>` : ''}
     <h2>${m.title}</h2>
     <div class="modal-body">${m.body}</div>
@@ -604,6 +613,8 @@ function drainEvents() {
         queueModal({
           eyebrow: `${BUILDINGS[ev.building].name} rebuilt`,
           title: `${ev.count} survivors return`,
+          art: villageSVG(s, E.derive(s).cap, ev.building),
+          wide: true,
           body: ev.lines.map(([who, line]) => `<p><b>${who}:</b> “${line}”</p>`).join('') +
             `<p class="hint small">${ev.building === 'barracks' ? 'Three of them take up the guard posts. The Night Watch is posted; scavengers will stay away.' : 'Give them jobs on the Jobs tab.'}</p>`,
         });
@@ -688,6 +699,20 @@ document.addEventListener('click', (e) => {
       const art = document.querySelector('.dragon-art');
       if (art) { art.classList.remove('nuzzle'); void art.offsetWidth; art.classList.add('nuzzle'); }
       changed = false;
+      break;
+    }
+    case 'focus': {
+      changed = false;
+      const id = { hut: 'hut', farm: 'farm', blacksmith: 'blacksmith', barracks: 'barracks', tent: 'tent', hall: 'hall', dock: 'dock', den: 'den' }[arg];
+      const card = id && document.getElementById(`card-${id}`);
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        card.classList.remove('flash');
+        void card.offsetWidth;
+        card.classList.add('flash');
+      } else if (AREA_INFO[arg]) {
+        toast(AREA_INFO[arg]);
+      }
       break;
     }
     case 'evolve': E.evolve(s); break;

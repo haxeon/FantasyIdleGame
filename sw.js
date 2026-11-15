@@ -1,9 +1,9 @@
 // Offline support: serve the app shell from cache, refresh it from the
 // network when online.
-const CACHE = 'dragon-chief-v1';
+const CACHE = 'dragon-chief-v2';
 const SHELL = [
   './', 'index.html', 'styles.css', 'manifest.webmanifest',
-  'src/main.js', 'src/engine.js', 'src/data.js', 'src/dragonArt.js',
+  'src/main.js', 'src/engine.js', 'src/data.js', 'src/dragonArt.js', 'src/villageArt.js',
   'icons/icon.svg', 'icons/icon-192.png', 'icons/icon-512.png',
 ];
 

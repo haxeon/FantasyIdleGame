@@ -2,7 +2,9 @@
 
 A mobile incremental idle game. A young chief rebuilds his raided village, finds out he alone can bond with dragons, and raises one dragon from hatchling to legend.
 
-Built from the *Dragon Chief — Idle Game Design Doc* (Nov 15, 2026). This build covers **Act 1: The Ashes** and **Act 2: The Bond**, ending on the Act 3 seed (Rune magic and the troll collars).
+Built from the *Dragon Chief — Idle Game Design Doc* (Nov 15, 2026). This build covers **Act 1: The Ashes** and - **Village view:** the Village tab shows the whole village, from smoking ruins to a restored settlement. Each building is redrawn as it is repaired and upgraded, villagers stand at their job sites, the stockpile grows with your stores, and the sky clears as the village is restored. Tap a building to jump to it.
+
+**Act 2: The Bond**, ending on the Act 3 seed (Rune magic and the troll collars).
 
 ## Play
 
@@ -25,6 +27,8 @@ On a phone, open the URL and use **Add to Home Screen** to install it full-scree
 - Clues found while gathering fill the Lore journal.
 - Finale: the baby dragon in the troll net (you name it).
 
+- **Village view:** the Village tab shows the whole village, from smoking ruins to a restored settlement. Each building is redrawn as it is repaired and upgraded, villagers stand at their job sites, the stockpile grows with your stores, and the sky clears as the village is restored. Tap a building to jump to it.
+
 **Act 2: The Bond**
 - Dragon needs (Hunger, Warmth, Affection) drain over time and combine into **Contentment**, which multiplies dragon XP, Bond and a village-wide morale bonus. A neglected dragon never dies; it just stops growing and boosting.
 - What you feed it before Juvenile decides its element: fish → Frost, roast → Fire, ore-salted → Storm.
@@ -43,6 +47,7 @@ On a phone, open the URL and use **Add to Home Screen** to install it full-scree
 | `src/engine.js` | Game rules as pure functions over a plain state object (tick, build, gather, dragon, raids, offline, save) |
 | `src/main.js` | Mobile UI, input, modals, save/load and the game loop |
 | `src/dragonArt.js` | Procedural SVG dragon that changes with stage, element and mood |
+| `src/villageArt.js` | Procedural SVG of the whole village, drawn from the game state: ruins, rebuilt buildings, upgrades, villagers at work and the restoration score |
 | `sw.js`, `manifest.webmanifest` | Offline cache and install metadata |
 | `test/engine.test.js` | Engine tests (`npm test`, Node 18+) |
 
