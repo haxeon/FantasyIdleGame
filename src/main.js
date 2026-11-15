@@ -546,9 +546,12 @@ function nextModal() {
     ${m.eyebrow ? `<div class="eyebrow">${m.eyebrow}</div>` : ''}
     <h2>${m.title}</h2>
     <div class="modal-body">${m.body}</div>
-    ${m.input ? `<label class="field">Name your dragon<input id="m-input" maxlength="16" value="${esc(m.input)}"></label>` : ''}
-    <button class="btn primary wide" id="m-ok">${m.button || 'Continue'}</button>
+    ${m.input != null ? `<label class="field">Name your dragon<input id="m-input" maxlength="16" value="${esc(m.input)}"></label>` : ''}
+    <button class="btn ${m.danger ? 'danger' : 'primary'} wide" id="m-ok">${m.button || 'Continue'}</button>
+    ${m.cancel ? '<button class="btn wide" id="m-cancel">Cancel</button>' : ''}
   </div>`;
+  const cancel = document.getElementById('m-cancel');
+  if (cancel) cancel.onclick = () => nextModal();
   document.getElementById('m-ok').onclick = () => {
     const input = document.getElementById('m-input');
     if (m.onClose) m.onClose(input ? input.value.trim() : undefined);
@@ -692,20 +695,29 @@ document.addEventListener('click', (e) => {
     case 'island': E.islandFlight(s); break;
     case 'rally': if (E.rally(s)) floatText(x, y, '+⚔️'); changed = false; break;
     case 'skill': E.buySkill(s, arg); break;
-    case 'rename': {
-      const n = prompt('Name your dragon', s.dragon.name);
-      if (n && n.trim()) s.dragon.name = n.trim().slice(0, 16);
+    case 'rename':
+      queueModal({
+        title: 'Rename your dragon', body: '', input: s.dragon.name, button: 'Save name', cancel: true,
+        onClose: (n) => { if (n) { s.dragon.name = n.slice(0, 16); main.key = null; } },
+      });
+      changed = false;
       break;
-    }
     case 'save': save(); toast('Saved.'); changed = false; break;
     case 'replay': queueStory(STORY.intro); changed = false; break;
     case 'reset':
-      if (confirm('Reset all progress? This cannot be undone.') && confirm('Really start over from the ashes?')) {
-        s = E.newState();
-        save();
-        tab = 'gather';
-        startIntro();
-      }
+      queueModal({
+        title: 'Start over from the ashes?',
+        body: '<p>This erases your village, your dragon and every clue. It cannot be undone.</p>',
+        button: 'Erase and restart', danger: true, cancel: true,
+        onClose: () => {
+          s = E.newState();
+          save();
+          tab = 'gather';
+          main.key = null;
+          startIntro();
+        },
+      });
+      changed = false;
       break;
     default: changed = false;
   }
